@@ -21,3 +21,6 @@ static/uploads/*
 
 # Temporary files
 *.log
+
+# Validation dataset
+validation_dataset/

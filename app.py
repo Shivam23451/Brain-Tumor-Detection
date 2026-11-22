@@ -23,6 +23,21 @@ from gridfs import GridFS
 from bson import ObjectId
 from werkzeug.utils import secure_filename
 
+# REPORTLAB - PDF GENERATION
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.enums import TA_CENTER
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+    Table,
+    TableStyle
+)
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import mm
+from xml.sax.saxutils import escape
+
 # FLASK APP
 
 app = Flask(__name__)
@@ -41,6 +56,10 @@ fs = GridFS(db)
 
 # Prediction collection
 predictions_collection = db["predictions"]
+
+# Medical report and doctor-entered prescription collections
+medical_reports_collection = db["medical_reports"]
+prescriptions_collection = db["prescriptions"]
 
 print("MongoDB connected successfully.")
 
@@ -446,6 +465,8 @@ def predict():
         )
 
     # SAVE PREDICTION TO MONGODB
+
+    prediction_id = None
     
 
     try:
@@ -464,12 +485,14 @@ def predict():
 
         }
 
-        predictions_collection.insert_one(
+        prediction_result = predictions_collection.insert_one(
             prediction_document
         )
+        prediction_id = str(prediction_result.inserted_id)
 
         print(
-            "Prediction saved to MongoDB."
+            "Prediction saved to MongoDB. ID:",
+            prediction_id
         )
 
     except Exception as e:
@@ -497,9 +520,280 @@ def predict():
 
         prediction=predicted_class,
 
-        confidence=confidence
+        confidence=confidence,
+
+        prediction_id=prediction_id
 
     )
+
+
+
+# PDF GENERATION HELPERS
+
+def create_pdf_response(story, filename):
+    """Build a PDF in memory and return it as a downloadable response."""
+    pdf_buffer = io.BytesIO()
+    document = SimpleDocTemplate(
+        pdf_buffer,
+        pagesize=A4,
+        rightMargin=18 * mm,
+        leftMargin=18 * mm,
+        topMargin=18 * mm,
+        bottomMargin=18 * mm
+    )
+    document.build(story)
+    pdf_buffer.seek(0)
+
+    return send_file(
+        pdf_buffer,
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name=filename
+    )
+
+
+def get_prediction_for_form():
+    """Load prediction details from MongoDB; never trust hidden prediction fields."""
+    prediction_id = (request.form.get("prediction_id") or "").strip()
+
+    if not ObjectId.is_valid(prediction_id):
+        return None
+
+    return predictions_collection.find_one(
+        {"_id": ObjectId(prediction_id)}
+    )
+
+
+def pdf_styles():
+    styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(
+        name="ReportTitleCustom",
+        parent=styles["Title"],
+        alignment=TA_CENTER,
+        fontSize=18,
+        leading=22,
+        spaceAfter=12
+    ))
+    styles.add(ParagraphStyle(
+        name="SmallNoteCustom",
+        parent=styles["BodyText"],
+        fontSize=8,
+        leading=11
+    ))
+    return styles
+
+
+# AI MEDICAL REPORT PDF
+
+@app.route("/generate-medical-report", methods=["POST"])
+def generate_medical_report():
+
+    patient_name = (request.form.get("patient_name") or "").strip()
+    patient_age = (request.form.get("patient_age") or "").strip()
+    patient_gender = (request.form.get("patient_gender") or "").strip()
+
+    if not patient_name or len(patient_name) > 100:
+        return "Please enter a valid patient name.", 400
+
+    if not patient_age.isdigit() or not 1 <= int(patient_age) <= 120:
+        return "Please enter a valid patient age.", 400
+
+    allowed_genders = {"Male", "Female", "Other", "Prefer not to say"}
+    if patient_gender not in allowed_genders:
+        return "Please select a valid gender option.", 400
+
+    try:
+        prediction_record = get_prediction_for_form()
+    except Exception as error:
+        app.logger.exception("Could not retrieve prediction for medical report: %s", error)
+        return "Unable to retrieve the MRI prediction record.", 500
+
+    if not prediction_record:
+        return "Prediction record not found. Please upload the MRI again.", 404
+
+    prediction = str(prediction_record.get("prediction", "Not available"))
+    confidence = prediction_record.get("confidence", "Not available")
+    created_at = prediction_record.get("created_at", datetime.now())
+
+    # Escape all user/model text before passing it to ReportLab Paragraph.
+    safe_patient_name = escape(patient_name)
+    safe_prediction = escape(prediction)
+    safe_gender = escape(patient_gender)
+
+    styles = pdf_styles()
+    story = [
+        Paragraph("BrainScan – AI MRI Analysis Report", styles["ReportTitleCustom"]),
+        Paragraph(
+            "ACADEMIC / RESEARCH INFORMATION — NOT A MEDICAL DIAGNOSIS",
+            styles["Heading2"]
+        ),
+        Spacer(1, 8),
+        Paragraph("Patient Information", styles["Heading2"]),
+        Paragraph(f"<b>Name:</b> {safe_patient_name}", styles["BodyText"]),
+        Paragraph(f"<b>Age:</b> {int(patient_age)}", styles["BodyText"]),
+        Paragraph(f"<b>Gender:</b> {safe_gender}", styles["BodyText"]),
+        Spacer(1, 10),
+        Paragraph("AI Model Output", styles["Heading2"]),
+        Paragraph(f"<b>Predicted category:</b> {safe_prediction}", styles["BodyText"]),
+        Paragraph(
+            f"<b>Model confidence:</b> {escape(str(confidence))}%",
+            styles["BodyText"]
+        ),
+        Paragraph(
+            f"<b>Analysis record date:</b> {escape(str(created_at))}",
+            styles["BodyText"]
+        ),
+        Spacer(1, 12),
+        Paragraph("Important Interpretation", styles["Heading2"]),
+        Paragraph(
+            "This document reports the output of an academic AI classification "
+            "prototype. The predicted category and confidence score are not a "
+            "confirmed diagnosis, do not establish tumor type or grade, and must "
+            "not be used to select treatment or medication.",
+            styles["BodyText"]
+        ),
+        Spacer(1, 8),
+        Paragraph("Suggested next step", styles["Heading2"]),
+        Paragraph(
+            "Have the original MRI images reviewed by a qualified radiologist "
+            "and discuss the findings with an appropriately qualified medical "
+            "specialist.",
+            styles["BodyText"]
+        ),
+        Spacer(1, 18),
+        Paragraph(
+            "Disclaimer: BrainScan is an academic and research prototype. "
+            "This report is not a substitute for professional medical "
+            "interpretation, diagnosis, or treatment advice.",
+            styles["SmallNoteCustom"]
+        )
+    ]
+
+    report_document = {
+        "prediction_id": prediction_record["_id"],
+        "patient_name": patient_name,
+        "patient_age": int(patient_age),
+        "patient_gender": patient_gender,
+        "prediction": prediction,
+        "confidence": confidence,
+        "created_at": datetime.now()
+    }
+
+    try:
+        medical_reports_collection.insert_one(report_document)
+    except Exception as error:
+        app.logger.exception("Could not save medical report metadata: %s", error)
+        return "Unable to save the medical report record.", 500
+
+    return create_pdf_response(story, "BrainScan_AI_Medical_Report.pdf")
+
+
+# DOCTOR-ENTERED PRESCRIPTION PDF
+
+@app.route("/generate-prescription", methods=["POST"])
+def generate_prescription():
+
+    patient_name = (request.form.get("patient_name") or "").strip()
+    patient_age = (request.form.get("patient_age") or "").strip()
+    doctor_name = (request.form.get("doctor_name") or "").strip()
+    registration_number = (request.form.get("registration_number") or "").strip()
+    clinical_diagnosis = (request.form.get("clinical_diagnosis") or "").strip()
+    medicine = (request.form.get("medicine") or "").strip()
+    dosage = (request.form.get("dosage") or "").strip()
+    duration = (request.form.get("duration") or "").strip()
+    doctor_advice = (request.form.get("doctor_advice") or "").strip()
+
+    required_values = [
+        patient_name, patient_age, doctor_name, registration_number,
+        clinical_diagnosis, medicine, dosage, duration
+    ]
+    if any(not value for value in required_values):
+        return "Please complete all required prescription fields.", 400
+
+    if len(patient_name) > 100 or len(doctor_name) > 100:
+        return "A name field is too long.", 400
+
+    if not patient_age.isdigit() or not 1 <= int(patient_age) <= 120:
+        return "Please enter a valid patient age.", 400
+
+    if len(registration_number) > 60:
+        return "Please enter a valid registration number.", 400
+
+    if request.form.get("doctor_confirmation") != "on":
+        return "Doctor confirmation is required to generate this draft.", 400
+
+    try:
+        prediction_record = get_prediction_for_form()
+    except Exception as error:
+        app.logger.exception("Could not retrieve prediction for prescription: %s", error)
+        return "Unable to retrieve the MRI prediction record.", 500
+
+    if not prediction_record:
+        return "Prediction record not found. Please upload the MRI again.", 404
+
+    # Escape every free-text field before adding it to the PDF.
+    safe = lambda value: escape(value).replace("\n", "<br/>")
+    styles = pdf_styles()
+
+    story = [
+        Paragraph("BrainScan – Doctor-Entered Prescription Draft", styles["ReportTitleCustom"]),
+        Paragraph(
+            "UNSIGNED DRAFT — NOT A VALID PRESCRIPTION",
+            styles["Heading2"]
+        ),
+        Spacer(1, 8),
+        Paragraph("Patient Details", styles["Heading2"]),
+        Paragraph(f"<b>Patient name:</b> {safe(patient_name)}", styles["BodyText"]),
+        Paragraph(f"<b>Age:</b> {int(patient_age)}", styles["BodyText"]),
+        Spacer(1, 8),
+        Paragraph("Doctor Details (entered by user)", styles["Heading2"]),
+        Paragraph(f"<b>Doctor name:</b> {safe(doctor_name)}", styles["BodyText"]),
+        Paragraph(
+            f"<b>Registration number entered:</b> {safe(registration_number)}",
+            styles["BodyText"]
+        ),
+        Spacer(1, 8),
+        Paragraph("Clinical Information", styles["Heading2"]),
+        Paragraph(f"<b>Clinical assessment:</b> {safe(clinical_diagnosis)}", styles["BodyText"]),
+        Paragraph(f"<b>Medicine:</b> {safe(medicine)}", styles["BodyText"]),
+        Paragraph(f"<b>Dosage and frequency:</b> {safe(dosage)}", styles["BodyText"]),
+        Paragraph(f"<b>Duration:</b> {safe(duration)}", styles["BodyText"]),
+        Paragraph(f"<b>Doctor's advice:</b> {safe(doctor_advice) if doctor_advice else 'Not provided'}", styles["BodyText"]),
+        Spacer(1, 12),
+        Paragraph(
+            "This prototype does not verify the identity, qualifications, or "
+            "registration of the person entering these details. The form entry "
+            "and checkbox are not an electronic signature or proof of doctor "
+            "authorization. A qualified practitioner must independently review, "
+            "correct, sign, and issue any actual prescription through an "
+            "appropriate authorized process.",
+            styles["SmallNoteCustom"]
+        )
+    ]
+
+    prescription_document = {
+        "prediction_id": prediction_record["_id"],
+        "patient_name": patient_name,
+        "patient_age": int(patient_age),
+        "doctor_name": doctor_name,
+        "registration_number": registration_number,
+        "clinical_diagnosis": clinical_diagnosis,
+        "medicine": medicine,
+        "dosage": dosage,
+        "duration": duration,
+        "doctor_advice": doctor_advice,
+        "status": "UNSIGNED_DRAFT_NOT_VALID_PRESCRIPTION",
+        "created_at": datetime.now()
+    }
+
+    try:
+        prescriptions_collection.insert_one(prescription_document)
+    except Exception as error:
+        app.logger.exception("Could not save prescription draft: %s", error)
+        return "Unable to save the prescription draft.", 500
+
+    return create_pdf_response(story, "BrainScan_Prescription_DRAFT.pdf")
+
 
 # SERVE MRI IMAGE FROM MONGODB GRIDFS
 

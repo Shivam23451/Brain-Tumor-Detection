@@ -3,38 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>BrainScan | Medical Analysis Report</title>
+
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
+
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/result.css') }}"
     />
   </head>
   <body>
-    <!-- ================= NAVBAR ================= -->
+    <!-- NAVBAR -->
 
     <nav class="navbar">
       <div class="logo">Brain<span>Scan</span></div>
 
       <div class="nav-links">
-        <a href="/"> Home </a>
-
-        <a href="/#about"> About </a>
-
-        <a href="/#technology"> Technology </a>
-
-        <a href="/#contact"> Contact </a>
+        <a href="/">Home</a>
+        <a href="/#about">About</a>
+        <a href="/#technology">Technology</a>
+        <a href="/#contact">Contact</a>
       </div>
     </nav>
 
-    <!-- ================= RESULT PAGE ================= -->
-
     <main class="result-page">
       <div class="result-container">
-        <!-- ================= HEADING ================= -->
+        <!-- HEADING -->
 
         <div class="result-heading">
           <p class="section-label">MRI ANALYSIS RESULT</p>
@@ -42,24 +39,24 @@
           <h1>Prediction Result</h1>
 
           <p class="result-description">
-            The uploaded MRI image has been processed by the classification
-            system.
+            The uploaded MRI image has been processed by the BrainScan
+            classification system.
           </p>
         </div>
 
-        <!-- ================= RESULT GRID ================= -->
+        <!-- RESULT GRID -->
 
         <div class="result-grid">
-          <!-- ================= MRI IMAGE ================= -->
+          <!-- MRI IMAGE -->
 
           <div class="image-card">
             <div class="card-title">
-              <span> MRI IMAGE </span>
+              <span>MRI IMAGE</span>
             </div>
 
             <div class="image-container">
               <img
-                src="{{ image_url}}"
+                src="{{ image_url }}"
                 alt="Uploaded MRI"
                 class="result-image"
               />
@@ -68,7 +65,7 @@
             <p class="image-status">Uploaded MRI Image</p>
           </div>
 
-          <!-- ================= PREDICTION ================= -->
+          <!-- PREDICTION -->
 
           <div class="prediction-card">
             <p class="result-label">PREDICTED CLASS</p>
@@ -80,11 +77,11 @@
               %} {{ prediction }} {% endif %}
             </h2>
 
-            <!-- ================= CONFIDENCE ================= -->
+            <!-- CONFIDENCE -->
 
             <div class="confidence-section">
               <div class="confidence-header">
-                <span> Confidence </span>
+                <span>Confidence</span>
 
                 <span> {{ "%.2f"|format(confidence) }}% </span>
               </div>
@@ -94,17 +91,352 @@
               </div>
             </div>
 
-            <!-- ================= STATUS ================= -->
+            <!-- STATUS -->
 
             <div class="status-box">
               <span class="status-dot"></span>
 
-              <span> Analysis Completed </span>
+              <span>Analysis Completed</span>
             </div>
           </div>
         </div>
 
-        <!-- ================= ACTION BUTTONS ================= -->
+        <!-- AI MEDICAL GUIDANCE -->
+
+        <section class="medical-report">
+          <div class="medical-heading">
+            <p class="section-label">MEDICAL INFORMATION</p>
+
+            <h2>AI Medical Guidance</h2>
+
+            <p>
+              General educational information based on the model's predicted
+              category.
+            </p>
+          </div>
+
+          <div class="medical-content">
+            {% if prediction == "glioma" %}
+
+            <h3>Glioma – General Information</h3>
+
+            <p>
+              Glioma is a type of tumor that originates from glial cells in the
+              brain or spinal cord. Its type and grade require specialist
+              evaluation.
+            </p>
+
+            <h4>Suggested Next Steps</h4>
+
+            <ul>
+              <li>Consult a qualified neurologist or neurosurgeon.</li>
+              <li>Get the MRI scan reviewed by a radiologist.</li>
+              <li>Discuss further investigations with your doctor.</li>
+            </ul>
+
+            {% elif prediction == "meningioma" %}
+
+            <h3>Meningioma – General Information</h3>
+
+            <p>
+              Meningioma develops from the meninges, the membranes surrounding
+              the brain and spinal cord. Clinical significance varies between
+              cases.
+            </p>
+
+            <h4>Suggested Next Steps</h4>
+
+            <ul>
+              <li>Consult a neurologist or neurosurgeon.</li>
+              <li>Discuss the MRI findings with a radiologist.</li>
+              <li>Follow the specialist's recommended monitoring plan.</li>
+            </ul>
+
+            {% elif prediction == "pituitary" %}
+
+            <h3>Pituitary Tumor – General Information</h3>
+
+            <p>
+              Pituitary tumors develop in the pituitary gland. Their evaluation
+              may involve imaging and hormonal assessment.
+            </p>
+
+            <h4>Suggested Next Steps</h4>
+
+            <ul>
+              <li>Consult an endocrinologist or neurosurgeon.</li>
+              <li>Discuss whether hormonal testing is required.</li>
+              <li>Get the MRI findings reviewed by a specialist.</li>
+            </ul>
+
+            {% elif prediction == "no_tumor" %}
+
+            <h3>No Tumor Predicted</h3>
+
+            <p>
+              The model classified this MRI image as No Tumor. This result does
+              not rule out abnormalities or other medical conditions.
+            </p>
+
+            <h4>Suggested Next Steps</h4>
+
+            <ul>
+              <li>
+                Consult a radiologist for professional MRI interpretation.
+              </li>
+              <li>Discuss any symptoms with your doctor.</li>
+              <li>Follow medical advice if further examination is required.</li>
+            </ul>
+
+            {% else %}
+
+            <h3>Medical Review Required</h3>
+
+            <p>
+              The predicted category requires professional interpretation by a
+              qualified medical specialist.
+            </p>
+
+            {% endif %}
+          </div>
+
+          <div class="medical-warning">
+            <strong>Important:</strong>
+
+            This information is automatically generated for educational
+            purposes. It is not a confirmed diagnosis or a treatment
+            recommendation.
+          </div>
+        </section>
+
+        <!-- PATIENT INFORMATION -->
+
+        <section class="patient-section">
+          <div class="medical-heading">
+            <p class="section-label">PATIENT DETAILS</p>
+
+            <h2>Patient Information</h2>
+          </div>
+
+          <form
+            action="{{ url_for('generate_medical_report') }}"
+            method="POST"
+            class="patient-form"
+          >
+            <div class="form-group">
+              <label for="patient_name"> Patient Name </label>
+
+              <input
+                type="text"
+                id="patient_name"
+                name="patient_name"
+                placeholder="Enter patient name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="patient_age"> Age </label>
+
+              <input
+                type="number"
+                id="patient_age"
+                name="patient_age"
+                min="1"
+                max="120"
+                placeholder="Enter age"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="patient_gender"> Gender </label>
+
+              <select id="patient_gender" name="patient_gender" required>
+                <option value="">Select Gender</option>
+
+                <option value="Male">Male</option>
+
+                <option value="Female">Female</option>
+
+                <option value="Other">Other</option>
+
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </div>
+
+            <input
+              type="hidden"
+              name="prediction_id"
+              value="{{ prediction_id or '' }}"
+            />
+
+            <button type="submit" class="btn">
+              Download AI Medical Report PDF
+            </button>
+          </form>
+        </section>
+
+        <!-- DOCTOR PRESCRIPTION -->
+
+        <section class="prescription-section">
+          <div class="medical-heading">
+            <p class="section-label">DOCTOR MODULE</p>
+
+            <h2>Doctor Prescription</h2>
+
+            <p>
+              This section is intended for completion and approval by a
+              qualified doctor.
+            </p>
+          </div>
+
+          <form
+            action="{{ url_for('generate_prescription') }}"
+            method="POST"
+            class="prescription-form"
+          >
+            <!-- PATIENT DETAILS -->
+
+            <h3>Patient Details</h3>
+
+            <div class="form-group">
+              <label>Patient Name</label>
+
+              <input
+                type="text"
+                name="patient_name"
+                placeholder="Patient name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Patient Age</label>
+
+              <input
+                type="number"
+                name="patient_age"
+                min="1"
+                max="120"
+                placeholder="Age"
+                required
+              />
+            </div>
+
+            <!-- DOCTOR DETAILS -->
+
+            <h3>Doctor Details</h3>
+
+            <div class="form-group">
+              <label>Doctor Name</label>
+
+              <input
+                type="text"
+                name="doctor_name"
+                placeholder="Doctor name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Doctor Registration Number</label>
+
+              <input
+                type="text"
+                name="registration_number"
+                placeholder="Registration number"
+                required
+              />
+            </div>
+
+            <!-- CLINICAL DETAILS -->
+
+            <h3>Clinical Information</h3>
+
+            <div class="form-group">
+              <label>Clinical Diagnosis</label>
+
+              <textarea
+                name="clinical_diagnosis"
+                rows="3"
+                placeholder="Doctor's clinical assessment"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Medicine Name</label>
+
+              <textarea
+                name="medicine"
+                rows="3"
+                placeholder="Medicine name and details entered by doctor"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Dosage and Frequency</label>
+
+              <textarea
+                name="dosage"
+                rows="3"
+                placeholder="Doctor-prescribed dosage and frequency"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Duration</label>
+
+              <input
+                type="text"
+                name="duration"
+                placeholder="Treatment duration"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Doctor's Advice</label>
+
+              <textarea
+                name="doctor_advice"
+                rows="4"
+                placeholder="Doctor's instructions"
+              ></textarea>
+            </div>
+
+            <input
+              type="hidden"
+              name="prediction_id"
+              value="{{ prediction_id or '' }}"
+            />
+
+            <div class="form-group doctor-confirmation">
+              <label>
+                <input type="checkbox" name="doctor_confirmation" required />
+                I confirm that I am a qualified medical practitioner and have
+                independently reviewed the information entered above.
+              </label>
+            </div>
+
+            <button type="submit" class="btn prescription-btn">
+              Generate Doctor Prescription PDF
+            </button>
+          </form>
+
+          <div class="medical-warning">
+            <strong>Doctor Authorization Required:</strong>
+
+            This form must only be completed and approved by a qualified medical
+            practitioner. The AI prediction must not be treated as a confirmed
+            clinical diagnosis.
+          </div>
+        </section>
+
+        <!-- ACTION BUTTONS -->
 
         <div class="result-actions">
           <a href="/predict" class="btn"> Analyze Another MRI </a>
@@ -112,14 +444,14 @@
           <a href="/" class="secondary-btn"> Back to Home </a>
         </div>
 
-        <!-- ================= DISCLAIMER ================= -->
+        <!-- DISCLAIMER -->
 
         <div class="disclaimer">
-          <strong> Important: </strong>
+          <strong>Important:</strong>
 
-          This system is developed for academic, educational and research
-          purposes only. The prediction should not be considered a medical
-          diagnosis.
+          BrainScan is an academic and research prototype. Its predictions are
+          not a substitute for professional radiological interpretation, medical
+          diagnosis, or treatment decisions.
         </div>
       </div>
     </main>

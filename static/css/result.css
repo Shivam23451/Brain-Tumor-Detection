@@ -1,66 +1,12 @@
 /* =========================================
-   RESULT PAGE
+   AI MEDICAL REPORT
 ========================================= */
 
-.result-page {
-    min-height: calc(100vh - 75px);
+.medical-report,
+.patient-section,
+.prescription-section {
 
-    padding: 70px 8%;
-
-    display: flex;
-    justify-content: center;
-}
-
-
-.result-container {
-    width: 100%;
-    max-width: 1100px;
-}
-
-
-/* =========================================
-   HEADING
-========================================= */
-
-.result-heading {
-    margin-bottom: 40px;
-}
-
-
-.result-heading h1 {
-    font-size: 46px;
-
-    margin-bottom: 12px;
-}
-
-
-.result-description {
-    color: #91a5b8;
-
-    font-size: 16px;
-}
-
-
-/* =========================================
-   RESULT GRID
-========================================= */
-
-.result-grid {
-
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 25px;
-}
-
-
-/* =========================================
-   CARDS
-========================================= */
-
-.image-card,
-.prediction-card {
+    margin-top: 35px;
 
     padding: 30px;
 
@@ -70,287 +16,238 @@
 
     border-radius: 18px;
 
-    min-height: 450px;
-}
-
-
-/* =========================================
-   CARD TITLE
-========================================= */
-
-.card-title {
-
-    color: #35c2ff;
-
-    font-size: 13px;
-
-    font-weight: bold;
-
-    letter-spacing: 2px;
-
-    margin-bottom: 20px;
-}
-
-
-/* =========================================
-   IMAGE
-========================================= */
-
-.image-container {
-
-    width: 100%;
-
-    height: 340px;
-
-    background: #050d17;
-
-    border-radius: 12px;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    overflow: hidden;
-
-    border: 1px solid #29465d;
-}
-
-
-.result-image {
-
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: contain;
-}
-
-
-.image-status {
-
-    margin-top: 15px;
-
-    color: #91a5b8;
-
-    text-align: center;
-
-    font-size: 14px;
-}
-
-
-/* =========================================
-   PREDICTION
-========================================= */
-
-.result-label {
-
-    color: #35c2ff;
-
-    font-size: 13px;
-
-    font-weight: bold;
-
-    letter-spacing: 2px;
-
-    margin-bottom: 15px;
-}
-
-
-.prediction-card h2 {
-
-    font-size: 38px;
-
-    margin-bottom: 50px;
-
     color: #ffffff;
 }
 
 
-/* =========================================
-   CONFIDENCE
-========================================= */
+.medical-heading {
+    margin-bottom: 25px;
+}
 
-.confidence-section {
+.medical-heading h2 {
+    font-size: 28px;
+    margin: 12px 0;
+    color: #ffffff;
+}
 
-    margin-bottom: 30px;
+.medical-heading p {
+    color: #91a5b8;
+    line-height: 1.7;
 }
 
 
-.confidence-header {
+/* =========================================
+   MEDICAL CONTENT
+========================================= */
 
-    display: flex;
+.medical-content {
 
-    justify-content: space-between;
+    padding: 25px;
 
-    margin-bottom: 10px;
+    background: #091827;
 
+    border: 1px solid #20394f;
+
+    border-left: 4px solid #35c2ff;
+
+    border-radius: 12px;
+
+    line-height: 1.8;
+}
+
+.medical-content h3 {
+    color: #35c2ff;
+    margin-bottom: 15px;
+}
+
+.medical-content h4 {
+    color: #ffffff;
+    margin-top: 20px;
+}
+
+.medical-content p,
+.medical-content li {
     color: #b9c7d5;
 }
 
-
-.confidence-header span:last-child {
-
-    color: #35c2ff;
-
-    font-weight: bold;
-}
-
-
-.progress-bar {
-
-    width: 100%;
-
-    height: 10px;
-
-    background: #172c40;
-
-    border-radius: 20px;
-
-    overflow: hidden;
-}
-
-
-.progress {
-
-    height: 100%;
-
-    background: #35c2ff;
-
-    border-radius: 20px;
-
-    transition: width 0.5s ease;
+.medical-content ul {
+    padding-left: 22px;
 }
 
 
 /* =========================================
-   STATUS
+   MEDICAL WARNING
 ========================================= */
 
-.status-box {
+.medical-warning {
 
-    display: flex;
+    margin-top: 20px;
 
-    align-items: center;
+    padding: 18px;
 
-    gap: 10px;
-
-    padding: 15px;
-
-    background: #0a1927;
-
-    border-radius: 10px;
-
-    color: #b9c7d5;
-}
-
-
-.status-dot {
-
-    width: 10px;
-
-    height: 10px;
-
-    background: #35c2ff;
-
-    border-radius: 50%;
-}
-
-
-/* =========================================
-   ACTION BUTTONS
-========================================= */
-
-.result-actions {
-
-    margin-top: 30px;
-
-    display: flex;
-
-    gap: 15px;
-
-    flex-wrap: wrap;
-}
-
-
-.secondary-btn {
-
-    display: inline-block;
-
-    padding: 15px 30px;
-
-    color: #35c2ff;
-
-    border: 1px solid #35c2ff;
-
-    border-radius: 8px;
-
-    text-decoration: none;
-
-    font-weight: bold;
-
-    transition: 0.3s;
-}
-
-
-.secondary-btn:hover {
-
-    background: #35c2ff;
-
-    color: #03101c;
-}
-
-
-/* =========================================
-   DISCLAIMER
-========================================= */
-
-.disclaimer {
-
-    margin-top: 35px;
-
-    padding: 18px 20px;
-
-    background: #151c20;
+    background: #282317;
 
     border-left: 3px solid #d7a95c;
 
     border-radius: 8px;
 
-    color: #aebdcc;
+    color: #c9b995;
 
-    font-size: 13px;
+    line-height: 1.7;
+
 }
 
-
-.disclaimer strong {
-
-    color: #d7a95c;
+.medical-warning strong {
+    color: #e6bd70;
 }
 
 
 /* =========================================
-   RESPONSIVE
+   PATIENT & DOCTOR FORMS
+========================================= */
+
+.patient-form,
+.prescription-form {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+
+}
+
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+}
+
+
+.form-group label {
+
+    color: #b9c7d5;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+}
+
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+
+    width: 100%;
+
+    padding: 14px;
+
+    background: #091827;
+
+    border: 1px solid #29465d;
+
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    outline: none;
+
+    font-family: inherit;
+
+    box-sizing: border-box;
+
+    transition: 0.3s;
+
+}
+
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+
+    border-color: #35c2ff;
+
+    box-shadow: 0 0 0 3px rgba(53, 194, 255, 0.1);
+
+}
+
+
+.form-group textarea {
+
+    min-height: 100px;
+
+    resize: vertical;
+
+}
+
+
+.form-group select option {
+
+    background: #0d1d2d;
+
+    color: #ffffff;
+
+}
+
+
+/* =========================================
+   FORM SECTION HEADINGS
+========================================= */
+
+.prescription-form h3 {
+
+    margin-top: 20px;
+
+    padding-bottom: 12px;
+
+    color: #35c2ff;
+
+    font-size: 18px;
+
+    border-bottom: 1px solid #20394f;
+
+}
+
+
+/* =========================================
+   PRESCRIPTION BUTTON
+========================================= */
+
+.prescription-btn {
+
+    margin-top: 10px;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================
+   RESPONSIVE DESIGN
 ========================================= */
 
 @media (max-width: 800px) {
 
-    .result-grid {
+    .medical-report,
+    .patient-section,
+    .prescription-section {
 
-        grid-template-columns: 1fr;
+        padding: 22px;
+
     }
 
+    .medical-heading h2 {
 
-    .result-heading h1 {
+        font-size: 24px;
 
-        font-size: 36px;
-    }
-
-
-    .image-container {
-
-        height: 300px;
     }
 
 }
@@ -358,35 +255,24 @@
 
 @media (max-width: 500px) {
 
-    .result-page {
+    .medical-report,
+    .patient-section,
+    .prescription-section {
 
-        padding: 50px 5%;
+        padding: 18px;
+
     }
 
+    .medical-heading h2 {
 
-    .image-card,
-    .prediction-card {
+        font-size: 21px;
 
-        padding: 20px;
     }
 
+    .medical-content {
 
-    .prediction-card h2 {
+        padding: 16px;
 
-        font-size: 30px;
-    }
-
-
-    .result-actions {
-
-        flex-direction: column;
-    }
-
-
-    .result-actions .btn,
-    .result-actions .secondary-btn {
-
-        text-align: center;
     }
 
 }
