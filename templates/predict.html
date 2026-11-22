@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>BrainScan - MRI Prediction</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/predict.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <nav class="navbar">
+      <div class="logo">Brain<span>Scan</span></div>
+
+      <div class="nav-links">
+        <a href="/"> Home </a>
+
+        <a href="/#about"> About </a>
+
+        <a href="/#technology"> Technology </a>
+
+        <a href="/#contact"> Contact </a>
+      </div>
+    </nav>
+
+    <!-- =====================================================
+         PREDICTION PAGE
+    ====================================================== -->
+
+    <section class="prediction-page">
+      <div class="upload-container">
+        <p class="section-label">MRI IMAGE ANALYSIS</p>
+
+        <h1>Upload Your MRI Image</h1>
+
+        <p class="upload-description">
+          Upload a brain MRI image in JPG, JPEG or PNG format for
+          classification.
+        </p>
+
+{% if error %}
+    <div class="error-message">
+        {{ error }}
+    </div>
+{% endif %}
+        <!-- =================================================
+                 UPLOAD FORM
+            ================================================== -->
+
+        <form action="/predict" method="POST" enctype="multipart/form-data">
+          <div class="upload-box">
+            <!-- MRI ICON -->
+
+            <div class="upload-icon">MRI</div>
+
+            <!-- TITLE -->
+
+            <h3>Select MRI Image</h3>
+
+            <!-- SUPPORTED FORMATS -->
+
+            <p>Supported formats: JPG, JPEG, PNG</p>
+
+            <!-- CHOOSE BUTTON -->
+
+            <label for="mri_image" class="choose-btn"> Choose MRI Image </label>
+
+            <!-- FILE INPUT -->
+
+            <input
+              type="file"
+              id="mri_image"
+              name="mri_image"
+              class="file-input"
+              accept=".jpg,.jpeg,.png"
+              required
+            />
+
+            <!-- FILE NAME -->
+
+            <p id="file-name">No image selected</p>
+
+            <!-- IMAGE PREVIEW -->
+
+            <img id="image-preview" class="preview" alt="MRI Preview" />
+
+            <!-- PREDICT BUTTON -->
+
+            <button type="submit" class="predict-btn">Predict MRI</button>
+          </div>
+        </form>
+
+        <!-- =================================================
+                 BACK TO HOME
+            ================================================== -->
+
+        <a href="/" class="back-home"> ← Back to Home </a>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="{{ url_for('static', filename='js/predict.js') }}"></script>
+</body>
+</html>

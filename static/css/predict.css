@@ -1,0 +1,159 @@
+.prediction-page {
+    min-height: calc(100vh - 75px);
+    padding: 70px 8%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-container {
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+}
+
+.upload-container h1 {
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.upload-description {
+    color: #9fb1c2;
+    margin-bottom: 35px;
+}
+
+.upload-box {
+    padding: 50px 35px;
+
+    background: #0d1d2d;
+
+    border: 2px dashed #2b526d;
+    border-radius: 20px;
+}
+
+.upload-icon {
+    width: 90px;
+    height: 90px;
+
+    margin: auto;
+
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #35c2ff;
+
+    border: 2px solid #35c2ff;
+
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.upload-box h3 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.upload-box p {
+    color: #91a5b8;
+}
+
+.file-input {
+    display: none;
+}
+
+.choose-btn {
+    display: inline-block;
+
+    margin-top: 15px;
+    padding: 13px 25px;
+
+    background: #172c40;
+    color: #35c2ff;
+
+    border: 1px solid #35c2ff;
+    border-radius: 8px;
+
+    cursor: pointer;
+}
+
+#file-name {
+    margin-top: 20px;
+    color: #35c2ff;
+}
+
+.preview {
+    display: none;
+
+    width: 300px;
+    max-width: 100%;
+    max-height: 300px;
+
+    margin: 25px auto;
+
+    border-radius: 12px;
+    border: 1px solid #35c2ff;
+}
+
+.predict-btn {
+    display: block;
+
+    margin: 25px auto 0;
+
+    padding: 15px 35px;
+
+    background: #35c2ff;
+    color: #03101c;
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.back-home {
+    display: inline-block;
+
+    margin-top: 25px;
+
+    color: #91a5b8;
+    text-decoration: none;
+}
+
+
+/* ============================================================
+   ERROR MESSAGE
+   ============================================================ */
+
+.error-message {
+    width: 90%;
+    max-width: 600px;
+
+    margin: 20px auto;
+
+    padding: 14px 18px;
+
+    background: rgba(255, 70, 70, 0.10);
+
+    border: 1px solid #ff5555;
+
+    border-radius: 10px;
+
+    color: #ff6b6b;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+
+    text-align: center;
+
+    box-sizing: border-box;
+}

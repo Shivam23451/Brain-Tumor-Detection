@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+     <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            Brain<span>Scan</span>
+        </div>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="#about">About</a>
+            <a href="#technology">Technology</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <p class="tagline">
+                MRI IMAGE CLASSIFICATION SYSTEM
+            </p>
+
+            <h1>
+                Brain Tumor Detection
+                <br>
+                Using MRI Images
+            </h1>
+
+            <p class="description">
+                Upload an MRI brain image and our trained deep learning
+                model will classify it into the appropriate tumor category.
+            </p>
+
+            <a href="/predict" class="btn">
+                Upload MRI Image
+            </a>
+
+        </div>
+
+
+        <div class="hero-card">
+
+            <div class="scan-circle">
+                MRI
+            </div>
+
+            <h3>AI-Powered MRI Analysis</h3>
+
+            <p>
+                ResNet50 based image classification
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Classification Classes -->
+    <section class="classes">
+
+        <h2>Supported Classifications</h2>
+
+        <div class="class-container">
+
+            <div class="class-card">
+                <h3>Glioma</h3>
+                <p>Brain tumor classification</p>
+            </div>
+
+            <div class="class-card">
+                <h3>Meningioma</h3>
+                <p>Brain tumor classification</p>
+            </div>
+
+            <div class="class-card">
+                <h3>Pituitary</h3>
+                <p>Pituitary tumor classification</p>
+            </div>
+
+            <div class="class-card">
+                <h3>No Tumor</h3>
+                <p>No tumor detected</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- About -->
+    <section class="about" id="about">
+
+        <div>
+
+            <p class="section-label">ABOUT PROJECT</p>
+
+            <h2>
+                Automated MRI Image Classification
+            </h2>
+
+            <p>
+                This project uses deep learning techniques to classify
+                brain MRI images into different categories. The system
+                performs image preprocessing and uses a trained ResNet50
+                model to generate the predicted class and confidence score.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Technology -->
+    <section class="technology" id="technology">
+
+        <p class="section-label">TECHNOLOGY</p>
+
+        <h2>Technologies Used</h2>
+
+        <div class="tech-container">
+
+            <div class="tech-card">
+                <h3>ResNet50</h3>
+                <p>Deep learning image classification model.</p>
+            </div>
+
+            <div class="tech-card">
+                <h3>Python</h3>
+                <p>Backend and machine learning implementation.</p>
+            </div>
+
+            <div class="tech-card">
+                <h3>Flask</h3>
+                <p>Web application backend framework.</p>
+            </div>
+
+            <div class="tech-card">
+                <h3>OpenCV</h3>
+                <p>MRI image preprocessing and handling.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer id="contact">
+
+        <h3>Brain Tumor Detection System</h3>
+
+        <p>
+            Academic Major Project | MRI Image Classification
+        </p>
+
+        <p class="warning">
+            ⚠ This system is intended for educational and research
+            purposes only and should not be used as a medical diagnosis.
+        </p>
+
+    </footer>
+</body>
+</html>

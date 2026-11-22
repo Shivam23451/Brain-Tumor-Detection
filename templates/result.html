@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/result.css') }}"
+    />
+  </head>
+  <body>
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+      <div class="logo">Brain<span>Scan</span></div>
+
+      <div class="nav-links">
+        <a href="/"> Home </a>
+
+        <a href="/#about"> About </a>
+
+        <a href="/#technology"> Technology </a>
+
+        <a href="/#contact"> Contact </a>
+      </div>
+    </nav>
+
+    <!-- ================= RESULT PAGE ================= -->
+
+    <main class="result-page">
+      <div class="result-container">
+        <!-- ================= HEADING ================= -->
+
+        <div class="result-heading">
+          <p class="section-label">MRI ANALYSIS RESULT</p>
+
+          <h1>Prediction Result</h1>
+
+          <p class="result-description">
+            The uploaded MRI image has been processed by the classification
+            system.
+          </p>
+        </div>
+
+        <!-- ================= RESULT GRID ================= -->
+
+        <div class="result-grid">
+          <!-- ================= MRI IMAGE ================= -->
+
+          <div class="image-card">
+            <div class="card-title">
+              <span> MRI IMAGE </span>
+            </div>
+
+            <div class="image-container">
+              <img
+                src="{{ image_url}}"
+                alt="Uploaded MRI"
+                class="result-image"
+              />
+            </div>
+
+            <p class="image-status">Uploaded MRI Image</p>
+          </div>
+
+          <!-- ================= PREDICTION ================= -->
+
+          <div class="prediction-card">
+            <p class="result-label">PREDICTED CLASS</p>
+
+            <h2>
+              {% if prediction == "no_tumor" %} No Tumor {% elif prediction ==
+              "glioma" %} Glioma {% elif prediction == "meningioma" %}
+              Meningioma {% elif prediction == "pituitary" %} Pituitary {% else
+              %} {{ prediction }} {% endif %}
+            </h2>
+
+            <!-- ================= CONFIDENCE ================= -->
+
+            <div class="confidence-section">
+              <div class="confidence-header">
+                <span> Confidence </span>
+
+                <span> {{ "%.2f"|format(confidence) }}% </span>
+              </div>
+
+              <div class="progress-bar">
+                <div class="progress" style="width: {{ confidence }}%;"></div>
+              </div>
+            </div>
+
+            <!-- ================= STATUS ================= -->
+
+            <div class="status-box">
+              <span class="status-dot"></span>
+
+              <span> Analysis Completed </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= ACTION BUTTONS ================= -->
+
+        <div class="result-actions">
+          <a href="/predict" class="btn"> Analyze Another MRI </a>
+
+          <a href="/" class="secondary-btn"> Back to Home </a>
+        </div>
+
+        <!-- ================= DISCLAIMER ================= -->
+
+        <div class="disclaimer">
+          <strong> Important: </strong>
+
+          This system is developed for academic, educational and research
+          purposes only. The prediction should not be considered a medical
+          diagnosis.
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
